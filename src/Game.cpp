@@ -53,9 +53,11 @@ void Game::serialize(std::ostream &os) const {
                 obs.put(static_cast<int>(Unit::Type::catapult), 3);
             else
                 obs.put(static_cast<int>(Unit::Type::super_soldier), 3);
+            obs.put(playground().field()[i]->hp(), 4);
         } else
             obs.put(0, 1);
     }
+    obs.flush();
 }
 
 void Game::deserialize(std::istream &is) {
@@ -77,6 +79,7 @@ void Game::deserialize(std::istream &is) {
     redPlayer().base().hp() = static_cast<unsigned int>(ibs.get(7));
     redPlayer().gold() = static_cast<unsigned int>(ibs.get(7));
     playground().base(Player::Side::red) = redPlayer().base();
+
     /* units */
     for (int i = 0; i < 12; i++) {
         if (ibs.get(1)) {
@@ -100,7 +103,6 @@ void Game::deserialize(std::istream &is) {
             (!team ? bluePlayer() : redPlayer()).units().push_back(playground().field()[i]);
         }
     }
-
 }
 
 void Game::run() {

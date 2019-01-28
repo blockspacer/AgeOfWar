@@ -12,7 +12,7 @@ public:
     typedef typename Traits::off_type off_type;
     typedef CharType traits_type;
 private:
-    std::streamsize m_current_bcount;
+    std::size_t m_current_bcount;
 
 protected:
     basic_ibitstream(const basic_ibitstream &rhs) = delete;
@@ -20,71 +20,75 @@ protected:
     basic_ibitstream(basic_ibitstream &&other) : std::basic_istream<CharType, Traits>(other),
                                                m_current_bcount(std::move(other.m_current_bcount)) {}
 
+	std::size_t &current_bcount() {
+		return m_current_bcount;
+	}
+
 public:
     explicit basic_ibitstream(std::basic_streambuf<CharType, Traits> *sb) : std::basic_istream<CharType, Traits>(sb),
-                                                                            m_current_bcount(sizeof(int_type) << 3) {}
+                                                                            m_current_bcount(sizeof(char_type) << 3) {}
 
 
 public:
 	/* Unformatted (bit-friendly) input */
     basic_ibitstream &get(char_type &ch) {
-        m_current_bcount = sizeof(int_type) << 3;
+        m_current_bcount = sizeof(char_type) << 3;
         std::basic_istream<CharType, Traits>::get(ch);
         return *this;
     }
 
     basic_ibitstream &get(char_type *s, std::streamsize count) {
-        m_current_bcount = sizeof(int_type) << 3;
+        m_current_bcount = sizeof(char_type) << 3;
         std::basic_istream<CharType, Traits>::get(s, count);
         return *this;
     }
 
     basic_ibitstream &get(char_type *s, std::streamsize count, char_type delim) {
-        m_current_bcount = sizeof(int_type) << 3;
+        m_current_bcount = sizeof(char_type) << 3;
         std::basic_istream<CharType, Traits>::get(s, count, delim);
         return *this;
     }
 
     basic_ibitstream &get(std::basic_streambuf<CharType, Traits> &strbuf) {
-        m_current_bcount = sizeof(int_type) << 3;
+        m_current_bcount = sizeof(char_type) << 3;
         std::basic_istream<CharType, Traits>::get(strbuf);
         return *this;
     }
 
     basic_ibitstream &get(std::basic_streambuf<CharType, Traits> &strbuf, char_type delim) {
-        m_current_bcount = sizeof(int_type) << 3;
+        m_current_bcount = sizeof(char_type) << 3;
         std::basic_istream<CharType, Traits>::get(strbuf, delim);
         return *this;
     }
 
 	/* Unformatted (bit) input */
     int_type get() {
-        m_current_bcount = sizeof(int_type) << 3;
+        m_current_bcount = sizeof(char_type) << 3;
         return std::basic_istream<CharType, Traits>::get();
     }
 
     int_type get(std::size_t count) {
-        if (count < 0)
-            return 0;
-        char_type i = 0;
-        while (m_current_bcount < count) {
-            i |= get();
-            count -= m_current_bcount;
-            i <<= count;
-        }
-        i |= (std::basic_istream<CharType, Traits>::peek() & ((1 << count) - 1));
-        m_current_bcount -= count;
-        std::cout << "get: " << (int) i;
-        return i;
+	    count = std::min(sizeof(int_type) << 8, count);
+	    std::cout << "get: " << count << " " << current_bcount() << std::endl;
+	    int_type result = 0;
+	    while (true) {
+	    	if (count < current_bcount()) {
+			    std::cout << "  peek: " << count << ": " << (result | (std::basic_istream<CharType, Traits>::peek() >> current_bcount() - count & (1 << count) - 1)) << std::endl;
+			    return result | (std::basic_istream<CharType, Traits>::peek() >> (current_bcount() -= count) & (1 << count) - 1);
+		    } else if (count == current_bcount()) {
+	    		std::cout << "  get: " << count << ": " << (result | (std::basic_istream<CharType, Traits>::peek() & (1 << count) - 1)) << std::endl;
+			    return result | (get() & ((1 << count) - 1));
+	    	}
+		    std::size_t curr_bcount = current_bcount();
+	    	std::cout << "  get_loop: " << result << " " << current_bcount() << std::endl;
+		    result |= (get() & (1 << curr_bcount) - 1) << (count -= curr_bcount);
+		    std::cout << "  get_loop2: " << result << " " << current_bcount() << std::endl;
+	    }
     }
 
     basic_ibitstream &get(int_type &i, std::streamsize count = 1) {
         i = get(count);
         return *this;
-    }
-
-    std::streamsize bcount() const {
-        return std::basic_istream<CharType, Traits>::gcount() * sizeof(CharType) * 8;
     }
 };
 
@@ -123,9 +127,8 @@ public:
     }
 
     basic_obitstream &put(int_type ch, std::size_t count) {
-        std::cout << "put: " << ch << ';' << (int)m_buffer << std::endl;
+    	count = std::min(sizeof(int_type) << 8, count);
         while (0 < count) {
-            std::cout << "  put_while:" << (int) m_buffer << " " << currentch_bcount() << " " << count << std::endl;
             if (currentch_bcount() < count) {
                 m_buffer |= (ch >> (count -= currentch_bcount())) & ((1 << currentch_bcount()) - 1);
                 put(m_buffer);
@@ -137,19 +140,14 @@ public:
                 count = 0;
             }
         }
-        std::cout << "  end: " << ch << ';' << (int)m_buffer << std::endl;
         return *this;
     }
 
     basic_obitstream &flush() {
-        if (m_buffer != 0)
+        if (m_current_bcount != sizeof(char_type) << 3)
             put(m_buffer);
         std::basic_ostream<CharType, Traits>::flush();
         return *this;
-    }
-
-    std::streamsize bcount() const {
-        return std::basic_istream<CharType, Traits>::gcount() * sizeof(CharType) * 8;
     }
 
     std::size_t currentch_bcount() const {

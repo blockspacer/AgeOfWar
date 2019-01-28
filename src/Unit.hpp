@@ -12,7 +12,7 @@ class Playground;
 class Unit : public Entity {
 public:
 	enum class Type {
-		soldier, archer, catapult, super_soldier
+		soldier = 0, archer = 1, catapult = 2, super_soldier = 3
 	};
 
 private:
