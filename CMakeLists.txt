@@ -28,4 +28,4 @@ add_executable(AgeofWar
         src/Archer.cpp
         src/Catapult.cpp
 
-        src/utils/bitstream.cpp src/SuperSoldier.cpp src/SuperSoldier.hpp src/utils/ANSIColors.hpp src/utils/ANSIColors.cpp)
+        src/SuperSoldier.cpp src/SuperSoldier.hpp src/utils/ANSIColors.hpp src/utils/ANSIColors.cpp)
