@@ -37,4 +37,9 @@
 # CMake Files
 cmake-build-debug/*
 
+# Doxygen
+doxy/*
+
+rapport/*
+
 
