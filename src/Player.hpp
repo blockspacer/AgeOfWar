@@ -23,6 +23,7 @@ private:
 	Base m_base;
 	std::vector<Unit *> m_units;
 
+protected:
 	/* Behavior */
 	/**
 	 * Recrute une nouvelle unité recrutable passé en paramètre.

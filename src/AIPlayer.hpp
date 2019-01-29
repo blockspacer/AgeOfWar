@@ -4,11 +4,7 @@
 #include "Player.hpp"
 
 class AIPlayer : public Player {
-private:
-    void (*m_routine)(Playground &);
-
 public:
-
     explicit AIPlayer(Player::Side side);
     ~AIPlayer() = default;
 

@@ -3,7 +3,6 @@
 #include <algorithm>
 
 #include "Playground.hpp"
-#include "Player.hpp"
 
 Unit::Unit(unsigned int hp, unsigned int atk, const Range &range,
            const AreaOfEffect &areaOfEffect) : Entity(hp), m_atk(atk), m_range(range), m_areaOfEffect(areaOfEffect) {}

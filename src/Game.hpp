@@ -18,7 +18,7 @@ private:
 
 public:
     Game();
-	Game(const char *m_save);
+	Game(const char *m_save, bool AI = false);
     ~Game() override = default;
 
     unsigned int turnNo() const {

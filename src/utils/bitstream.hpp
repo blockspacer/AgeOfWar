@@ -72,17 +72,12 @@ public:
 	    std::cout << "get: " << count << " " << current_bcount() << std::endl;
 	    int_type result = 0;
 	    while (true) {
-	    	if (count < current_bcount()) {
-			    std::cout << "  peek: " << count << ": " << (result | (std::basic_istream<CharType, Traits>::peek() >> current_bcount() - count & (1 << count) - 1)) << std::endl;
+	    	if (count < current_bcount())
 			    return result | (std::basic_istream<CharType, Traits>::peek() >> (current_bcount() -= count) & (1 << count) - 1);
-		    } else if (count == current_bcount()) {
-	    		std::cout << "  get: " << count << ": " << (result | (std::basic_istream<CharType, Traits>::peek() & (1 << count) - 1)) << std::endl;
+		    else if (count == current_bcount())
 			    return result | (get() & ((1 << count) - 1));
-	    	}
 		    std::size_t curr_bcount = current_bcount();
-	    	std::cout << "  get_loop: " << result << " " << current_bcount() << std::endl;
 		    result |= (get() & (1 << curr_bcount) - 1) << (count -= curr_bcount);
-		    std::cout << "  get_loop2: " << result << " " << current_bcount() << std::endl;
 	    }
     }
 

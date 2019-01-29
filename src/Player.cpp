@@ -1,7 +1,6 @@
 #include "Player.hpp"
 
 #include <algorithm>
-#include <iostream>
 
 #include "Playground.hpp"
 
@@ -52,7 +51,6 @@ void Player::turn(Playground &playground) {
 }
 
 void Player::play(Playground &playground) {
-    /* On traduit en -1 en 11 et 1 en 0 (car -1 (11...11) & 0b10110 = 22 et 22 >> 1 = 11, 0 & 0b10110 = 0 et 0 >> 1 = 0). */
     std::cin.sync();
     if (playground.field()[~side()] == nullptr) {
         switch (std::cin.get()) {
@@ -65,6 +63,8 @@ void Player::play(Playground &playground) {
             case '3':
 	            playground.field()[~side()] = new Catapult();
 	            break;
+	        case 'q':
+	        	break;
             default:
 	            break;
         }
