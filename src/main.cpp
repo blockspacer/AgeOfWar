@@ -66,8 +66,8 @@ void help() {
 		<< "ageofwar, try to survive and destroy the ennemy base." << std::endl << std::endl
 
 		<< "  -ai                fight against AI." << std::endl
-		<< "  --new_save[=FILE]  creates a new game on save FILE, if FILE is not defined 'saves/untitled' is used." << std::endl
-		<< "  --load_save=FILE   load a save FILE." << std::endl
+		<< "  --new_save[=TITLE]  creates a new game on save TITLE, if TITLE is not defined 'saves/untitled' is used." << std::endl
+		<< "  --load_save=TITLE   load a save TITLE." << std::endl
 		<< "      --help     display this help and exit" << std::endl
 		<< "      --version  output version information and exit" << std::endl;
 }
