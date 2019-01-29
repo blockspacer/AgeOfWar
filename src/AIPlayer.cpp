@@ -10,6 +10,8 @@
 
 AIPlayer::AIPlayer(Player::Side side) : Player(side) {}
 
+AIPlayer::AIPlayer(const Player &other) : Player(other) {}
+
 void AIPlayer::play(Playground &playground) {
 	if (playground.field()[~side()] == nullptr) {
 		if (Catapult().price() <= gold()) {

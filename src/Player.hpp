@@ -36,8 +36,9 @@ public:
 	 * Constructeur de la classe.
 	 * @param side désigne le côté du joueur.
 	 */
-	Player(Side side);
+	explicit Player(Side side);
 	Player(Side side, unsigned int gold);
+	Player(const Player &other);
 	~Player() = default;
 
 	/* Accessors & Mutators */

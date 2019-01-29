@@ -17,9 +17,9 @@ private:
     Playground m_playground;
 
 public:
-    Game();
+    Game(bool AI = false);
 	Game(const char *m_save, bool AI = false);
-    ~Game() override = default;
+    ~Game() override;
 
     unsigned int turnNo() const {
         return m_turnNo;

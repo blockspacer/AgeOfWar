@@ -12,30 +12,7 @@ Player::Player(Player::Side s) : m_side(s), m_gold(10), m_base(), m_units() {}
 
 Player::Player(Player::Side side, unsigned int gold) : m_side(side), m_gold(gold), m_base(), m_units() {}
 
-/*
-void Player::deserialize(std::istream &is) {
-    gold() = static_cast<std::uint8_t>(is.get());
-    base().hp() = static_cast<std::uint8_t>(is.get());
-    auto unitno = static_cast<std::uint8_t>(is.get());
-    for (std::uint8_t i = 0; i < unitno; i++) {
-        auto p = static_cast<std::uint8_t>(is.get() & 0b00001111);
-        Unit *u = nullptr;
-        switch (static_cast<Unit::Type>(is.peek() >> 4)) {
-            case Unit::Type::infantryman:
-                u = new Soldier();
-                break;
-            case Unit::Type::archer:
-                u = new Soldier();
-                break;
-            case Unit::Type::catapult:
-                u = new Soldier();
-                break;
-            case Unit::Type::super_soldier:
-                break;
-        }
-    }
-}
-*/
+Player::Player(const Player &other) : m_side(other.m_side), m_gold(other.m_gold), m_base(other.m_base), m_units(other.m_units) {}
 
 /* Behavior */
 void Player::turn(Playground &playground) {

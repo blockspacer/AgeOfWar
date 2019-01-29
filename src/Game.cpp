@@ -12,17 +12,18 @@
 #include "Catapult.hpp"
 #include "SuperSoldier.hpp"
 
-Game::Game() : m_save(), m_turnNo(1), m_bluePlayer(*new Player(Player::Side::blue)),
-               m_redPlayer(*new Player(Player::Side::red)),
+Game::Game(bool AI) : m_save(), m_turnNo(1), m_bluePlayer(*new Player(Player::Side::blue)),
+               m_redPlayer(AI ? *new AIPlayer(Player::Side::red) : *new Player(Player::Side::red)),
                m_playground(m_bluePlayer.base(), m_redPlayer.base()) {}
 
 
 Game::Game(const char *save, bool AI) : m_save(save), m_turnNo(1),
                                                 m_bluePlayer(*new Player(Player::Side::blue)),
-                                                m_redPlayer(AI ? *new AIPlayer(Player::Side::blue): *new Player(Player::Side::red)),
+                                                m_redPlayer(AI ? *new AIPlayer(Player::Side::red) : *new Player(Player::Side::red)),
                                                 m_playground(m_bluePlayer.base(), m_redPlayer.base()) {
-	std::string s = save;
-	s += +".sav";
+	std::string s = "saves/";
+	s += save;
+	s += + ".sav";
 	std::fstream ifs(s);
 	ifs.peek();
 	if (!ifs.eof())
@@ -30,11 +31,16 @@ Game::Game(const char *save, bool AI) : m_save(save), m_turnNo(1),
 	ifs.close();
 }
 
+Game::~Game() {
+	delete &m_bluePlayer;
+	delete &m_redPlayer;
+}
+
 void Game::serialize(std::ostream &os) const {
 	obitstream obs = obitstream(os.rdbuf());
 	obs.put(turnNo(), 7);
 	/* blue */
-	obs.put(static_cast<int>(dynamic_cast<AIPlayer *>(&m_bluePlayer) ? 1 : 0), 1);
+	obs.put(dynamic_cast<AIPlayer *>(&m_bluePlayer) ? 1 : 0, 1);
 	obs.put(bluePlayer().base().hp(), 7);
 	obs.put(bluePlayer().gold(), 7);
 
@@ -68,7 +74,7 @@ void Game::deserialize(std::istream &is) {
 	/* blue */
 	if (ibs.get(1)) {
 		delete &m_bluePlayer;
-		bluePlayer() = *new AIPlayer(Player::Side::blue);
+		m_bluePlayer = *new AIPlayer(Player::Side::blue);
 	}
 	bluePlayer().base().hp() = static_cast<unsigned int>(ibs.get(7));
 	bluePlayer().gold() = static_cast<unsigned int>(ibs.get(7));
@@ -76,7 +82,7 @@ void Game::deserialize(std::istream &is) {
 	/* red */
 	if (ibs.get(1)) {
 		delete &m_redPlayer;
-		redPlayer() = *new AIPlayer(Player::Side::red);
+		m_redPlayer = *new AIPlayer(Player::Side::red);
 	}
 	redPlayer().base().hp() = static_cast<unsigned int>(ibs.get(7));
 	redPlayer().gold() = static_cast<unsigned int>(ibs.get(7));
@@ -112,8 +118,9 @@ void Game::run() {
 	while (m_running) {
 		turn();
 		if (m_save) {
-			std::string s = m_save;
-			s += ".sav";
+			std::string s = "saves/";
+			s += m_save;
+			s += + ".sav";
 			std::ofstream ofs(s, std::ios_base::trunc);
 			serialize(ofs);
 			ofs.close();
