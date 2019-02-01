@@ -68,7 +68,7 @@ void help() {
 }
 
 void version() {
-	std::cout << "ageofwar (lcsdavid loirirs) 1.0" << std::endl
+	std::cout << "ageofwar (lcsdavid loisirs) 1.0" << std::endl
 		<< "Copyright (C) 2019 Free Lucas' Software Foundation, Inc." << std::endl
 		<< "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>." << std::endl
 		<< "This is free software: you are free to change and redistribute it." << std::endl
