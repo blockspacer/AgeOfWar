@@ -69,15 +69,14 @@ public:
 
     int_type get(std::size_t count) {
 	    count = std::min(sizeof(int_type) << 8, count);
-	    std::cout << "get: " << count << " " << current_bcount() << std::endl;
 	    int_type result = 0;
 	    while (true) {
 	    	if (count < current_bcount())
-			    return result | (std::basic_istream<CharType, Traits>::peek() >> (current_bcount() -= count) & (1 << count) - 1);
+			    return result | (std::basic_istream<CharType, Traits>::peek() >> (current_bcount() -= count) & ((1 << count) - 1));
 		    else if (count == current_bcount())
 			    return result | (get() & ((1 << count) - 1));
 		    std::size_t curr_bcount = current_bcount();
-		    result |= (get() & (1 << curr_bcount) - 1) << (count -= curr_bcount);
+		    result |= (get() & ((1 << curr_bcount) - 1)) << (count -= curr_bcount);
 	    }
     }
 

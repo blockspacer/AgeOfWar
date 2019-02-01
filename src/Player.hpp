@@ -39,7 +39,7 @@ public:
 	explicit Player(Side side);
 	Player(Side side, unsigned int gold);
 	Player(const Player &other);
-	~Player() = default;
+	virtual ~Player() = default;
 
 	/* Accessors & Mutators */
 	Side side() const;

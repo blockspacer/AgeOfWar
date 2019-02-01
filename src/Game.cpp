@@ -197,7 +197,7 @@ std::ostream &operator<<(std::ostream &os, const Game &game) {
 	std::string blueHp = std::to_string(game.bluePlayer().base().hp()) + "hp",
 			redHp = std::to_string(game.redPlayer().base().hp()) + "hp";
 	os << "            " << ansi::color(blueHp, ansi::normal_blue_foreground);
-	for (int i = 0; i < 72 - blueHp.size() - redHp.size(); i++)
+	for (unsigned int i = 0; i < 72 - blueHp.size() - redHp.size(); i++)
 		std::cout << ' ';
 	os << "            " << ansi::color(redHp, ansi::normal_red_foreground) << std::endl;
 
@@ -205,7 +205,7 @@ std::ostream &operator<<(std::ostream &os, const Game &game) {
 	std::string blueGold = std::to_string(game.bluePlayer().gold()) + 'g', redGold =
 			std::to_string(game.redPlayer().gold()) + 'g';
 	os << "Gold: " << ansi::color(blueGold, ansi::normal_yellow_foreground);
-	for (int i = 0; i < 97 - blueGold.size() - redGold.size(); i++)
+	for (unsigned int i = 0; i < 97 - blueGold.size() - redGold.size(); i++)
 		std::cout << ' ';
 	os << "Gold: " << ansi::color(redGold, ansi::normal_yellow_foreground) << std::endl;
 
@@ -238,7 +238,7 @@ std::ostream &operator<<(std::ostream &os, const Game &game) {
 		os << ' ';
 		if (game.playground().field()[i] != nullptr) {
 			std::string hp = std::to_string(game.playground().field()[i]->hp());
-			for (int j = 0; j < (4 - hp.size()) / 2; j++) os << ' ';
+			for (unsigned int j = 0; j < (4 - hp.size()) / 2; j++) os << ' ';
 			os << hp << "hp";
 			for (int j = 0; j < (4 - hp.size()) / 2.; j++) os << ' ';
 		} else

@@ -7,7 +7,7 @@ class AIPlayer : public Player {
 public:
     explicit AIPlayer(Player::Side side);
     AIPlayer(const Player &other);
-    ~AIPlayer() = default;
+    ~AIPlayer() override = default;
 
     void play(Playground &playground) override;
 };
