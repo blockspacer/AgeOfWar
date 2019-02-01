@@ -1,11 +1,6 @@
 #include <cstring>
 #include <iostream>
-
-#if defined(_WIN64)
-#include <locale>
 #include <fstream>
-
-#endif
 
 #include "Game.hpp"
 #include "utils/ANSIColors.hpp"
